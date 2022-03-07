@@ -1,0 +1,10 @@
+English
+Hindi
+Spanish
+French
+German
+Latin
+Chinese
+Dutch
+Korean
+Japanese

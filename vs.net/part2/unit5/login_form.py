@@ -16,21 +16,24 @@ def application(environ, start_response):
     pw = params['password'][0] if 'password' in params else None
 
     if path == '/register' and un and pw:
+        start_response('200 OK', headers)
         user = cursor.execute('SELECT * FROM users WHERE username = ?', [un]).fetchall()
         if user:
-            start_response('200 OK', headers)
             return ['Sorry, username {} is taken'.format(un).encode()]
         else:
-            pass ###INSERT CODE HERE. Use SQL commands to insert the new username and password into the table that was created.###
+            connection.execute('INSERT INTO users VALUES (?, ?)', [un, pw])
+            connection.commit()
+            return ['Username Registered'.encode()]
 
     elif path == '/login' and un and pw:
+        start_response('200 OK', headers)
         user = cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', [un, pw]).fetchall()
+        print(user)
+        # cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', [u, p])
         if user:
             headers.append(('Set-Cookie', 'session={}:{}'.format(un, pw)))
-            start_response('200 OK', headers)
             return ['User {} successfully logged in. <a href="/account">Account</a>'.format(un).encode()]
         else:
-            start_response('200 OK', headers)
             return ['Incorrect username or password'.encode()]
 
     elif path == '/logout':
