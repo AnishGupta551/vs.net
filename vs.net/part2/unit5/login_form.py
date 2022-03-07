@@ -28,8 +28,6 @@ def application(environ, start_response):
     elif path == '/login' and un and pw:
         start_response('200 OK', headers)
         user = cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', [un, pw]).fetchall()
-        print(user)
-        # cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', [u, p])
         if user:
             headers.append(('Set-Cookie', 'session={}:{}'.format(un, pw)))
             return ['User {} successfully logged in. <a href="/account">Account</a>'.format(un).encode()]
